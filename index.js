@@ -33,6 +33,7 @@ async function main() {
     console.log("Generating info about reactions.");
     data.reactionAnalyser()
 }
+
 function server() {
     const express = require('express');
     const app = express();
