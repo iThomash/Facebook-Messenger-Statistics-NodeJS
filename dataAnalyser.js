@@ -105,7 +105,6 @@ module.exports = {
         let words = new Object();
         fs.readdirSync("./jsonData/").filter(f => f != "general.json").forEach((file) => {
             let bigMessage = "";
-            //number of messages is correct 3847 - 392 = 3455
             bigMessage = JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages
                 .filter(m => m.content && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))
                 .map(message => message.content)
@@ -121,7 +120,7 @@ module.exports = {
             });
             return bigMessage = "";
         });
-        delete words[""]; //Probably new lines but not its not a word!
+        delete words[""]; //Probably new lines but its not a word!
         fs.writeFileSync("./analysedData/words.json", JSON.stringify(words, null, "\t"));
         return;
     },
