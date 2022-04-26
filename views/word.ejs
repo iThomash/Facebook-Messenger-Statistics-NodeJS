@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Words Analyse</title>
+    <link rel="stylesheet" href="/styles/word.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 class="title">Words Analyse</h1>
+    <div class="text">
+        <p>
+            Along your journey with facebook below are shown your the most 100 frequently used words.
+        </p> 
+        <hr>
+        <div>
+            <p class="subtitle">Top 1 - 100 words</p>
+            <ol>
+            <% let topWords = Object.entries(words).sort(function(a,b){return b[1]-a[1]}).slice(0,100); %>
+            <% topWords.forEach((word)=>{ %>
+                <li><%= word[0] + " - " + word[1] %></li>
+            <% }) %>
+            </ol>
+        </div>
+        <hr>
+        <p id="contentSwitchP">
+            Probably most of your words are conjunctions and pronouns, so dont worry! I'm prepared for this situation and prepared your top 300 most used words! Click button below if you want to see some more information!
+        </p>
+        <button>Click here to expand this list more</button>
+        <hr class="visible vChange">
+        <div id="expandList" class="visible">
+            <% let topWords2 = Object.entries(words).sort(function(a,b){return b[1]-a[1]}).slice(100,300); %>
+            <p class="subtitle">Top 101 - <%= (topWords2.length+100<=300) ? topWords2.length+100 : "300"%> words</p>
+            <ol>
+            <% topWords2.forEach((word)=>{ %>
+                <li><%= word[0] + " - " + word[1] %></li>
+            <% }) %>
+            </ol>
+        </div>
+        <hr class="visible vChange">
+
+    </div>
+    <h1 class="title">Letter Analyse</h1>
+    <div class="text">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus, recusandae molestiae molestias et itaque voluptate commodi omnis magni alias dolores, numquam tempora repudiandae, quis quidem quo aliquam laborum aperiam doloremque.
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum minima inventore provident cupiditate corporis est culpa ipsa tenetur totam voluptates, quos mollitia debitis facilis! Odit nihil doloremque voluptatibus natus possimus?
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero sapiente animi odio perferendis veniam eos veritatis quas voluptates eligendi voluptate vitae voluptas temporibus atque omnis, mollitia amet molestias nihil tenetur.
+    </div>
+    <script>
+        document.querySelector(".text button").addEventListener("click", ()=>{
+            document.querySelectorAll("#expandList, .vChange").forEach(e=>{e.classList.toggle("visible");});
+            if (document.querySelector("#expandList").classList.contains("visible")) {
+                document.querySelector("#contentSwitchP").textContent = "Probably most of your words are conjunctions and pronouns, so dont worry! I'm prepared for this situation and prepared your top 300 most used words! Click button below if you want to see some more information!";
+                return document.querySelector(".text button").textContent = "Click here to expand list!";
+            } else {
+                document.querySelector("#contentSwitchP").textContent = "Maybe now you can see more information about your words. Hope it helped a little bit! Remember you can expand and collapse list below at any time!";
+                return document.querySelector(".text button").textContent = "Click here to collapse list!";
+            }
+        });
+    </script>
+</body>
+</html>

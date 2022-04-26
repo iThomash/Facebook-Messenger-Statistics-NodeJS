@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" href="/styles/user.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/javascript/charts.js"></script>
+</head>
+<body>
+    <div id="generalStatistics">
+        <h1 class="title">General Statistics</h1>
+        <div id="textStatistics">
+            <h2 class="subtitle">General Statistics</h2>
+            <p>
+                You have sent a total of <b><%= overview.allMessagesSent %></b> messages. It includes your removed messages which is about <b><%= overview.removedMessages %></b>.
+                You have received <b><%= overview.allMessagesReceived %></b> messages. In sent messages are exactly <b><%= overview.allPhotosSent %></b> photos, and in received messages are <b><%= overview.allPhotosReceived %></b>.<br>
+                Person you have written the most is <b><%= overview.mostMessagesPerson[1].title || overview.mostMessagesPerson[1].participants.filter(u=>!userData.autofill_information_v2.FULL_NAME.includes(u)) %></b>.
+                You sent <b><%= overview.mostMessagesPerson[1].pMessages%></b> messages (<%= (overview.mostMessagesPerson[1].pMessages-overview.mostMessagesPerson[1].pPhotos) + " messages and " + overview.mostMessagesPerson[1].pPhotos + " photos" %>) what is exactly <b><%= (overview.mostMessagesPerson[1].pMessages/overview.allMessagesSent*100).toFixed(2) %>%</b> of your all messages.
+                This person sent you <b><%= overview.mostMessagesPerson[1].oMessages %></b> messages (<%= (overview.mostMessagesPerson[1].oMessages-overview.mostMessagesPerson[1].oPhotos) + " messages and " + overview.mostMessagesPerson[1].oPhotos + " photos" %>), what is <b><%= (overview.mostMessagesPerson[1].oMessages/overview.allMessagesReceived*100).toFixed(2) %>%</b> of your all messages.<br>
+                Group you have written the most is <b><%= overview.mostMessagesGroup[1].title || overview.mostMessagesGroup[1].participants.filter(u=>!userData.autofill_information_v2.FULL_NAME.includes(u)) %></b>.
+                You sent <b><%= overview.mostMessagesGroup[1].pMessages%></b> messages (<%= (overview.mostMessagesGroup[1].pMessages-overview.mostMessagesGroup[1].pPhotos) + " messages and " + overview.mostMessagesGroup[1].pPhotos + " photos" %>) what is exactly <b><%= (overview.mostMessagesGroup[1].pMessages/overview.allMessagesSent*100).toFixed(2) %>%</b> of your all messages.
+                This group sent you <b><%= overview.mostMessagesGroup[1].oMessages %></b> messages (<%= (overview.mostMessagesGroup[1].oMessages-overview.mostMessagesGroup[1].oPhotos) + " messages and " + overview.mostMessagesGroup[1].oPhotos + " photos" %>), what is <b><%= (overview.mostMessagesGroup[1].oMessages/overview.allMessagesReceived*100).toFixed(2) %>%</b> of your all messages.
+                <a href="#conversations">Click here to see conversations you write the most!</a>
+                <br> <br>
+                By the way, I counted all the words you have ever written <% let wordsCount = 0; Object.keys(words).forEach( key => wordsCount+=words[key] ) %><b><%= wordsCount %></b> words!
+                It makes <b><%= (wordsCount/overview.allMessagesSent).toFixed(2) %></b> words per message.
+                Word you have used the most is <b>"<%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][0] %>"</b>. You used it over <b><%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][1] %></b> times!
+                <a href="#wordsUsage">Click here for more details!</a>
+            </p>
+        </div>
+        <br>
+        <div id="conversationTypesStatistics">
+            <h2 class="subtitle">Types of conversations
+                <p>
+                    There <%= (overview.onePersonConversations.length===1) ? "is" : "are" %> <b> <%= overview.onePersonConversations.length %> </b> one person conversation<%= (overview.onePersonConversations.length===1) ? "" : "s" %>, it means everybody left group or its your self-conversation. 
+                    There are also <b><%= overview.standardConversations.length %></b> standard conversations(you and someone else, not included two person groups) and <b><%= overview.groupConversations.length %></b> groups. 
+                    You can check individual statistics for each conversation on right side of the page.
+                    Along your <b><%= overview.onePersonConversations.length + overview.standardConversations.length + overview.groupConversations.length%> </b> conversations, there <%- (overview.noMessagesIn.length===1) ? "is <b>one</b> empty conversation" : `are <b> ${overview.noMessagesIn.length}</b> empty conversations` %>.
+                </p>
+            </h2>
+            <h2 class="chart"><canvas id="conversationTypes" style="width:100%;"></canvas></h2>
+        </div>
+        <div id="messagesSentTime">
+            <h2 class="subtitle">When you write the most</h2>
+            <p>
+                Below you can find two charts. The first one represents your activity over the years and the second one shows hours in which you are writing mesages.
+            </p>
+            <h2 class="chart"><canvas id="yearActivityAnalyse" style="width:70%;"></canvas></h2>
+            <h2 class="chart"><canvas id="hourActivityAnalyse" style="width:70%;"></canvas></h2>
+        </div>
+        <div id="wordsUsage">
+            <h2 class="subtitle">Words you have used the most</h2>
+            <p>
+                As I said befor you have written <b><%= wordsCount %></b> words!
+                It means you write average of <b><%= (wordsCount/overview.allMessagesSent).toFixed(2) %></b> words per message(a message that is only a photo, text or both at once)
+                and <b><%= (wordsCount/(overview.allMessagesSent-overview.allPhotosSent)).toFixed(2) %></b> words per message(a message that is only a text or photo and text at once).
+                Word you have used the most is <b>"<%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][0] %>"</b>. You used it over <b><%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][1] %></b> times!
+                I would also like to show you some other words you use frequently. <b class="important">Important: Every word have been replaced with the same word but lower case. For example "Table" and "TABLE" are the same thing as "table". Words were divided by spaces and new lines! </b>
+            </p>
+            <% let sortedWords = Object.entries(words).sort((a, b)=>{return b[1]-a[1]}) %>
+            <ul>
+                <%for (let i=1;i<=7;i++) { %> 
+                    <li>
+                        <ol>
+                            <b class="olTitle"> <%= i + ((i===1) ? " letter words" :  " letters words") %></b> <% sortedWords.filter(w=>w[0].length===i).slice(0, 3).forEach(word=>{ %> <li class="word"><%= word[0] %> - <%= word[1] %> times</li> <% }); %>
+                        </ol>
+                    </li>
+                <% } %>
+                <li><ol><b class="olTitle">more than 7 letter word</b> <% sortedWords.filter(w=>w[0].length>=8).slice(0, 3).forEach(word=>{ %> <li class="word"><%= word[0] %> - <%= word[1] %> times</li> <% })%></ol></li>
+            </ul>
+            <p>
+                <a href="/word/">Click here to see more detailed word list!</a>
+            </p>
+        </div>
+        <div id="conversations">
+            <h1 class="subtitle">Conversations you participate the most</h1>
+            <p>
+                Here you may see extended information about your conversations! Below are shown 10 people/groups you attend the most and most active conversations you are in.
+            </p>
+            <% for (let conv in allUsers) { %>
+            <% allUsers[conv].title = allUsers[conv].title.replaceAll(/\"/g, "'") %>
+            <%  allUsers[conv].participants = allUsers[conv].participants.forEach(p=>p=p.replaceAll(/\"/g, "'")) %>
+            <% } %>
+            <h2 class="chart"><canvas id="sent"></canvas></h2>
+        </div>
+        <h1><a href="/user" class="title">Click here to go to the top</a></h1>
+    </div>
+    <div id="individualStatistics">
+        <h1 class="title">Individual Statistics</h1>
+        <h3>You can check statistics for individual conversations here. To make it easier for you I divided them into
+            conversations where you are the only one, normal conversations - you and someone else and groups.</h3>
+        <h1>* Conversations that have been archieved - you left group or someone kicked you. </h1>
+        <% Object.keys(generatedData).forEach((cType)=>{ %>
+            <h1 class="collapsible">
+                <%= descriptions[cType] %>
+            </h1>
+            <div class="userList">
+                <% generatedData[cType].sort(function(a,b){ return a.filePath.split("/")[1].localeCompare(b.filePath.split("/")[1])}).forEach((conv)=>{ %>
+                    <a href="/user/<%= conv.filePath.split("/")[1] %>">
+                        <%= conv.title || conv.filePath.split("/")[1] %>
+                            <%= (conv.filePath.split("/")[0]==="archived_threads" ) ? "*" : "" %>
+                    </a> <br>
+                    <% }) %>
+            </div>
+        <% }) %>
+    </div>
+    <script>
+        document.querySelectorAll(".collapsible").forEach(async (elem) => {
+            elem.addEventListener("click", function () {
+                let content = this.nextElementSibling;
+                this.classList.toggle("active");
+                if (content.style.display === "block") content.style.display = "none";
+                else content.style.display = "block";
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            conversationTypes("<%= overview.onePersonConversations.length %>;<%= overview.standardConversations.length %>;<%= overview.groupConversations.length %>")
+            yearActivityAnalyse("<%= JSON.stringify(yearActivityAnalyse) %>");
+            hourActivityAnalyse("<%= JSON.stringify(hourActivityAnalyse) %>");
+            messagesSentConversations("<%= JSON.stringify(Object.entries(allUsers).sort(function(a,b){return b[1].pMessages-a[1].pMessages}).slice(0,10)) %>", "<%= overview.allMessagesSent %>");
+        });
+    </script>
+</body>
+
+</html>

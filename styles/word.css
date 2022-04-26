@@ -1,0 +1,66 @@
+* {
+    font-family: 'Prompt', sans-serif;
+}
+body {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.title {
+    width: 100%;
+    font-size: 3em;
+    font-weight: normal;
+    display: flex;
+    justify-content: center;
+}
+.text {
+    margin: 0 5% 0 5%;
+    width: 100%;
+    font-size: x-large;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+hr {
+    width: 100%;
+}
+.text div {
+    width: 80%;
+}
+.subtitle {
+    width: 100%;
+    font-size: 2em;
+    text-align: center;
+}
+.text span {
+    color: blue;
+    cursor: pointer;
+}
+ol {
+    width: 100%;
+    flex-wrap: nowrap;
+    column-count: 4;
+    column-width: 100%;
+    list-style-type: none;
+}
+li {
+   width: 100%;
+}
+.visible {
+    display: none;
+}
+button {
+    font-size: 1.5em;
+    border: none;
+    background-color: #ccc;
+    color: black;
+    border-radius: 1em;
+    padding: 10px;
+}
+button:hover{
+    background-color: gray;
+    color: white;
+}
+#contentSwitchP {
+    min-height: 100px;
+}

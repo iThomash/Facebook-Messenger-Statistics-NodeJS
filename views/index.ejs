@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Facebook Statistics</title>
+        <link rel="stylesheet" href="/styles/index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    </head>
+<body>
+    <h1>Hi <%= autofill_information_v2.FIRST_NAME %>!</h1>
+    <div id="notice">
+        <h2>
+            <p>Notice!</p>
+            You downloaded this tool to check your Facebook statistics. 
+            Remember that this tool runs locally on your computer, which means that nothing is sent to the internet. 
+            All the data generated is based on data provided by you. The tool only analyses and creates a user-friendly representation of this data. 
+            Remember not to share/transmit the data you have used in this program anywhere, as these files contain information about you and other people you have spoken to. 
+            <b>Keep safe and use wisely.</b>
+        </h2>
+    </div>
+    <button>To your data!</button>
+    <div id="tutorial">
+        <h1>How to use?</h1>
+        <h2>todo</h2>
+    </div>
+    <script>
+        document.querySelector("button").addEventListener("click", ()=>{location.href="/user/"});
+    </script>
+</body>
+</html>

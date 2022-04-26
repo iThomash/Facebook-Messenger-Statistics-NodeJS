@@ -1,0 +1,132 @@
+* {
+    font-family: 'Prompt', sans-serif;
+}
+body {
+    display: flex;
+}
+#individualStatistics {
+    width: 30%;
+    margin-right: 3%;
+}
+.collapsible {
+    margin-bottom: 0;
+    font-size: 18px;
+    font-weight: normal;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #eee;
+    cursor: pointer;
+    padding: 18px 0px;
+    width: 100%
+}
+.title {
+    margin-bottom: 0;
+    font-size: 3em;
+    font-weight: normal;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.title:last-of-type {
+    color: black;
+    font-size: 2.5em;
+}
+.subtitle {
+    font-size: 2.5em;
+}
+div p {
+    font-weight: normal;
+    font-size: 23px;
+}
+#individualStatistics h1:nth-of-type(2) {
+    font-size: 18px;
+    font-weight: normal;
+    width: 100%;
+    text-align: center;
+    color: green;
+}
+#individualStatistics h3 {
+    width: 100%;
+    font-weight: normal;
+    display: flex;
+    text-align: center;
+}
+a {
+    text-decoration: none;
+    color: blue;
+}
+.active, .collapsible:hover {
+    background-color: #bbb;
+}
+.userList {
+    padding: 2% 5% 2% 5%;
+    max-width: auto;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+#generalStatistics {
+    width: 70%;
+    height: auto;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+#conversationTypesStatistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+#conversationTypesStatistics > h2:nth-of-type(1) {
+    width: 55%;
+}
+#conversationTypesStatistics .chart {
+    width: 30%;
+}
+#messagesSentTime {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: left;
+}
+#messagesSentTime h2:nth-of-type(1) {
+    width: 100%;
+}
+#messagesSentTime .chart {
+    width: 70%;
+}
+ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+ul > li {
+    width: 50%;
+}
+.olTitle {
+    font-size: 28px;
+}
+.word {
+    font-size: 23px;
+    padding-left: 2em;
+}
+ol, ul {
+    list-style-type: none;
+}
+.important {
+    color: green;
+}
+#conversations p {
+    width: 100%;
+}
+#conversations {
+    display: flex;
+    flex-wrap: wrap;
+}
+#conversations .chart {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+#conversations canvas {
+    max-width: 80%;
+}
