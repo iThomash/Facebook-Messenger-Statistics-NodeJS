@@ -40,13 +40,29 @@
             </ol>
         </div>
         <hr class="visible vChange">
-
+    </div>
+    <h1 class="title">Number Analyse</h1>
+    <div class="text">
+        <p>
+            Numbers are integral part of our existence, so I have prepered most used numbers by You. Shown are only numbers you have wrote more than 50 times!
+        </p>
+        <p id="numbers">
+            <% let numbers = Object.entries(words).filter((word)=>Number(word[0]) && !word[0].endsWith(".") && word[1]>=50).sort((a,b)=>{return b[1]-a[1]}); %>
+            <!-- numbers fix (. on the end, + sign) -->
+            <ol>
+            <% numbers.forEach((number)=>{ %>
+                <li><%= number[0] + " - " + number[1] %></li>
+            <% }) %>
+            </ol>
+        </p>
     </div>
     <h1 class="title">Letter Analyse</h1>
     <div class="text">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus, recusandae molestiae molestias et itaque voluptate commodi omnis magni alias dolores, numquam tempora repudiandae, quis quidem quo aliquam laborum aperiam doloremque.
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum minima inventore provident cupiditate corporis est culpa ipsa tenetur totam voluptates, quos mollitia debitis facilis! Odit nihil doloremque voluptatibus natus possimus?
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero sapiente animi odio perferendis veniam eos veritatis quas voluptates eligendi voluptate vitae voluptas temporibus atque omnis, mollitia amet molestias nihil tenetur.
+        <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus, recusandae molestiae molestias et itaque voluptate commodi omnis magni alias dolores, numquam tempora repudiandae, quis quidem quo aliquam laborum aperiam doloremque.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum minima inventore provident cupiditate corporis est culpa ipsa tenetur totam voluptates, quos mollitia debitis facilis! Odit nihil doloremque voluptatibus natus possimus?
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero sapiente animi odio perferendis veniam eos veritatis quas voluptates eligendi voluptate vitae voluptas temporibus atque omnis, mollitia amet molestias nihil tenetur.
+        </p>
     </div>
     <script>
         document.querySelector(".text button").addEventListener("click", ()=>{

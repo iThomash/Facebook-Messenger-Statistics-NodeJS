@@ -64,3 +64,13 @@ button:hover{
 #contentSwitchP {
     min-height: 100px;
 }
+p {
+    text-align: center;
+    width: 90%;
+}
+#numbers {
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+}
