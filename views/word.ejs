@@ -62,35 +62,38 @@
             </ol>
         </p>
         <p>
-            The <b>lowest</b> number ever used: <%= Math.min(...Object.keys(words).filter(n=>!isNaN(n))) %> <br>
-            The <b>highest</b> number ever used: <%= Math.max(...Object.keys(words).filter(n=>!isNaN(n))) %> <br>
+            The <b>lowest</b> number ever used: <%= Math.min(...Object.keys(words).filter(n=>!isNaN(n))); %> <br>
+            The <b>highest</b> number ever used: <%= Math.max(...Object.keys(words).filter(n=>!isNaN(n))); %> <br>
             Numbers might be written in scientific notation!
         </p>
     </div>
     <h1 class="title">Letter Analyse</h1>
     <div class="text">
         <p>
-            <%
+            Then let's check how many times was every letter written! <b class="warning">Local characters are not supported yet!</b>
+        </p>
+            <ol>
+                <% 
                 let alphabet = new Object();
-                let entries = Object.entries(words);
-                entries.forEach((word)=>{
+                Object.entries(words).forEach((word)=>{
                     word[0].split("").forEach((letter)=>{
                         if (!alphabet[letter]) alphabet[letter] = word[1];
                         else alphabet[letter]+=word[1];
                     });
                 });
-            %>
-            Then let's check how many times was every letter written! <b class="warning">Local characters are not supported yet!</b>
-            <ol>
-                <% //sort by number then by letter
-                Object.entries(alphabet).filter(l=>!/[^a-z0-9]/g.test(l[0])).sort((a,b)=>{return a[0]-b[0] || a[0].localeCompare(b[0])}).forEach(letterInAlphabet=>{ %>
-                    <li><%= letterInAlphabet[0] +" - " +letterInAlphabet[1] %></li>
-                <% }); //sort by occrence
-                Object.entries(alphabet).filter(l=>/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(l[0])).sort((a,b)=>{return b[1]-a[1]}).forEach(letterInAlphabet=>{ %>
-                    <li><%= letterInAlphabet[0] +" - " +letterInAlphabet[1] %></li>
+                %>
+                <% Object.entries(alphabet).filter(l=>!/[^a-z0-9]/g.test(l[0])).sort((a,b)=>{return a[0]-b[0] || a[0].localeCompare(b[0])}).forEach(letterInAlphabet=>{ %>
+                    <li><%= letterInAlphabet[0] + " - " + letterInAlphabet[1] %></li>
+                <% }); %>
+                <% Object.entries(alphabet).filter(l=>/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(l[0])).sort((a,b)=>{return b[1]-a[1]}).forEach(letterInAlphabet=>{ %>
+                    <li><%= letterInAlphabet[0] + " - " + letterInAlphabet[1] %></li>
                 <% }); %>
             </ol>
-        </p>
+        <p></p>
+    </div>
+    <div class="text">
+        <p>
+            </p>    
     </div>
     <script>
         document.querySelector(".text button").addEventListener("click", ()=>{
