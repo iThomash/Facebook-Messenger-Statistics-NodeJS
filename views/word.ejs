@@ -70,9 +70,26 @@
     <h1 class="title">Letter Analyse</h1>
     <div class="text">
         <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus, recusandae molestiae molestias et itaque voluptate commodi omnis magni alias dolores, numquam tempora repudiandae, quis quidem quo aliquam laborum aperiam doloremque.
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum minima inventore provident cupiditate corporis est culpa ipsa tenetur totam voluptates, quos mollitia debitis facilis! Odit nihil doloremque voluptatibus natus possimus?
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero sapiente animi odio perferendis veniam eos veritatis quas voluptates eligendi voluptate vitae voluptas temporibus atque omnis, mollitia amet molestias nihil tenetur.
+            <%
+                let alphabet = new Object();
+                let entries = Object.entries(words);
+                entries.forEach((word)=>{
+                    word[0].split("").forEach((letter)=>{
+                        if (!alphabet[letter]) alphabet[letter] = word[1];
+                        else alphabet[letter]+=word[1];
+                    });
+                });
+            %>
+            Then let's check how many times was every letter written! <b class="warning">Local characters are not supported yet!</b>
+            <ol>
+                <% //sort by number then by letter
+                Object.entries(alphabet).filter(l=>!/[^a-z0-9]/g.test(l[0])).sort((a,b)=>{return a[0]-b[0] || a[0].localeCompare(b[0])}).forEach(letterInAlphabet=>{ %>
+                    <li><%= letterInAlphabet[0] +" - " +letterInAlphabet[1] %></li>
+                <% }); //sort by occrence
+                Object.entries(alphabet).filter(l=>/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(l[0])).sort((a,b)=>{return b[1]-a[1]}).forEach(letterInAlphabet=>{ %>
+                    <li><%= letterInAlphabet[0] +" - " +letterInAlphabet[1] %></li>
+                <% }); %>
+            </ol>
         </p>
     </div>
     <script>

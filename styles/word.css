@@ -75,3 +75,6 @@ p {
     flex-wrap: wrap;
     height: auto;
 }
+.warning {
+    color: green;
+}
