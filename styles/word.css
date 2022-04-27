@@ -78,3 +78,12 @@ p {
 .warning {
     color: green;
 }
+a {
+    color: blue;
+    text-decoration: none;
+    font-size: larger;
+    color: gray;
+}
+a:hover {
+    color: black;
+}

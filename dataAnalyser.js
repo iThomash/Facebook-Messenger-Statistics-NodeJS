@@ -118,7 +118,7 @@ module.exports = {
                 else words[word] += 1;
                 return
             });
-            anotherBigMessage = "";
+            delete bigMessage, anotherBigMessage;
             return;
         });
         delete words[""]; //Probably new lines but its not a word!
