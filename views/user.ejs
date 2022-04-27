@@ -56,7 +56,7 @@
         <div id="wordsUsage">
             <h2 class="subtitle">Words you have used the most</h2>
             <p>
-                As I said befor you have written <b><%= wordsCount %></b> words!
+                As I said before you have written <b><%= wordsCount %></b> words!
                 It means you write average of <b><%= (wordsCount/overview.allMessagesSent).toFixed(2) %></b> words per message(a message that is only a photo, text or both at once)
                 and <b><%= (wordsCount/(overview.allMessagesSent-overview.allPhotosSent)).toFixed(2) %></b> words per message(a message that is only a text or photo and text at once).
                 Word you have used the most is <b>"<%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][0] %>"</b>. You used it over <b><%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][1] %></b> times!

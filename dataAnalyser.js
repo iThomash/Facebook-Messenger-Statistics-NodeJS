@@ -104,21 +104,22 @@ module.exports = {
     wordUsage: function (userData) {
         let words = new Object();
         fs.readdirSync("./jsonData/").filter(f => f != "general.json").forEach((file) => {
-            let bigMessage = "";
+            let bigMessage = "", anotherBigMessage="";
             bigMessage = JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages
                 .filter(m => m.content && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))
                 .map(message => message.content)
                 .join(" ");
             JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages.filter(m => m.content && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).forEach(message => {
-                bigMessage += " " + message.content;
+                anotherBigMessage += " " + message.content;
                 return;
             });
-            bigMessage.toLowerCase().replaceAll(/\n/g, " ").split(" ").forEach(word => {
+            anotherBigMessage.toLowerCase().replaceAll(/\n/g, " ").split(" ").forEach(word => {
                 if (!words[word]) words[word] = 1;
                 else words[word] += 1;
                 return
             });
-            return bigMessage = "";
+            anotherBigMessage = "";
+            return;
         });
         delete words[""]; //Probably new lines but its not a word!
         fs.writeFileSync("./analysedData/words.json", JSON.stringify(words, null, "\t"));

@@ -12,7 +12,7 @@
     <h1 class="title">Words Analyse</h1>
     <div class="text">
         <p>
-            Along your journey with facebook below are shown your the most 100 frequently used words.
+            Along your journey with facebook below are shown your the most <b>100</b> frequently used words.
         </p> 
         <hr>
         <div>
@@ -39,21 +39,32 @@
             <% }) %>
             </ol>
         </div>
-        <hr class="visible vChange">
     </div>
+    <hr>
     <h1 class="title">Number Analyse</h1>
     <div class="text">
         <p>
-            Numbers are integral part of our existence, so I have prepered most used numbers by You. Shown are only numbers you have wrote more than 50 times!
+            Numbers are integral part of our existence, so I have prepered most used numbers by You. Shown are only numbers you have wrote more than 30 times!
+            On left side is written number and on right side how many times u typed this number.
         </p>
         <p id="numbers">
-            <% let numbers = Object.entries(words).filter((word)=>Number(word[0]) && !word[0].endsWith(".") && word[1]>=50).sort((a,b)=>{return b[1]-a[1]}); %>
-            <!-- numbers fix (. on the end, + sign) -->
+            <% let numbers = Object.entries(words).filter((word)=>Number(word[0]) && !word[0].endsWith(".") && word[1]>=30); 
+                let objectNumbers = new Object();
+                numbers.forEach(num=>{
+                    if  (objectNumbers[parseFloat(num[0].replace(",","."))]) objectNumbers[parseFloat(num[0].replace(",","."))] += num[1];
+                    else objectNumbers[parseFloat(num[0].replace(",","."))] = num[1];
+                });
+            %>
             <ol>
-            <% numbers.forEach((number)=>{ %>
+            <% Object.entries(objectNumbers).sort((a,b)=>{return b[1]-a[1]}).forEach((number)=>{ %>
                 <li><%= number[0] + " - " + number[1] %></li>
             <% }) %>
             </ol>
+        </p>
+        <p>
+            The <b>lowest</b> number ever used: <%= Math.min(...Object.keys(words).filter(n=>!isNaN(n))) %> <br>
+            The <b>highest</b> number ever used: <%= Math.max(...Object.keys(words).filter(n=>!isNaN(n))) %> <br>
+            Numbers might be written in scientific notation!
         </p>
     </div>
     <h1 class="title">Letter Analyse</h1>
