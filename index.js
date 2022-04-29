@@ -50,8 +50,12 @@ function server() {
     });
 
     app.use('/user/:user', (req, res) => {
-        if (!dirConversations.includes(req.params.user)) return res.status(404).render("404", { params: req.params });
-        else return res.status(200).send(req.params);
+        if (!dirConversations.includes(req.params.user)) {
+            return res.status(404).render("404", { params: req.params });
+        } else {
+            let user = JSON.parse(fs.readFileSync(`./analysedData/allUsers.json`).toString())[req.params.user]
+            return res.status(200).render("userTemplate", {userInf: user});
+        }
     });
 
     app.get('/user/', (req, res) => {

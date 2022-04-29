@@ -78,12 +78,12 @@
             </p>
         </div>
         <div id="conversations">
-            <h1 class="subtitle">Conversations you participate the most</h1>
+            <h2 class="subtitle">Conversations you participate the most</h2>
             <p>
-                Here you may see extended information about your conversations! Below are shown 10 people/groups you attend the most and most active conversations you are in.
+                Here you may see extended information about your conversations! Below is shown 10 people/groups you attend the most.
             </p>
             <% for (let conv in allUsers) { %>
-            <% allUsers[conv].title = allUsers[conv].title.replaceAll(/\"/g, "'") %>
+            <%  allUsers[conv].title = allUsers[conv].title.replaceAll(/\"/g, "'") %>
             <%  allUsers[conv].participants = allUsers[conv].participants.forEach(p=>p=p.replaceAll(/\"/g, "'")) %>
             <% } %>
             <h2 class="chart"><canvas id="sent"></canvas></h2>
@@ -93,11 +93,11 @@
         <h1 class="title">Individual Statistics</h1>
         <h3>You can check statistics for individual conversations here. To make it easier for you I divided them into
             conversations where you are the only one, normal conversations - you and someone else and groups.</h3>
-        <h1>* Conversations that have been archieved - you left group or someone kicked you. </h1>
+        <h2>* Conversations that have been archieved - you left group or someone kicked you. </h2>
         <% Object.keys(generatedData).forEach((cType)=>{ %>
-            <h1 class="collapsible">
+            <h2 class="collapsible">
                 <%= descriptions[cType] %>
-            </h1>
+            </h2>
             <div class="userList">
                 <% generatedData[cType].sort(function(a,b){ return a.filePath.split("/")[1].localeCompare(b.filePath.split("/")[1])}).forEach((conv)=>{ %>
                     <a href="/user/<%= conv.filePath.split("/")[1] %>">
