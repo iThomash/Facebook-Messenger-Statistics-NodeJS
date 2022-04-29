@@ -187,7 +187,7 @@ function hourActivityAnalyse(hourActivity) {
         }
     });
 }
-function messagesSentConversations(overview, allMessagesSent) {
+function messagesSentConversations(overview, allMessagesSent, allMessagesReceived) {
     overview = JSON.parse(overview.replaceAll("&#34;", "\""));
     let labels = new Array(), values = new Array(), values2 = new Array();
     for (let i =0;i <overview.length;i++ ) {
@@ -228,7 +228,10 @@ function messagesSentConversations(overview, allMessagesSent) {
                     callbacks: {
                         title: (data)=>{return (data[0].datasetIndex===0) ? "Messages sent by You" : `Messages sent by ${data[0].label}`},
                         label: (data)=>{return `Messages: ${data.formattedValue}`},
-                        afterLabel: (data)=>{return `% of all Messages: ${(data.parsed.y/allMessagesSent*100).toFixed(2)}%`}
+                        afterLabel: (data)=>{
+                            if (data.datasetIndex===0) return `% of all Messages: ${(data.parsed.y/allMessagesSent*100).toFixed(2)}%`;
+                            else return `% of all Messages: ${(data.parsed.y/allMessagesReceived*100).toFixed(2)}%`;
+                        }
                     }
                 },
                 legend: {

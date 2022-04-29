@@ -130,7 +130,7 @@
             conversationTypes("<%= overview.onePersonConversations.length %>;<%= overview.standardConversations.length %>;<%= overview.groupConversations.length %>")
             yearActivityAnalyse("<%= JSON.stringify(yearActivityAnalyse) %>");
             hourActivityAnalyse("<%= JSON.stringify(hourActivityAnalyse) %>");
-            messagesSentConversations("<%= JSON.stringify(Object.entries(allUsers).sort(function(a,b){return b[1].pMessages-a[1].pMessages}).slice(0,10)) %>", "<%= overview.allMessagesSent %>");
+            messagesSentConversations("<%= JSON.stringify(Object.entries(allUsers).sort(function(a,b){return b[1].pMessages-a[1].pMessages}).slice(0,10)) %>", "<%= overview.allMessagesSent %>", "<%= overview.allMessagesReceived %>");
         });
     </script>
 </body>
