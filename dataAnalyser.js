@@ -5,23 +5,20 @@ module.exports = {
         let allConversations = new Object();
         allFiles.forEach(file => {
             let fileAsJSON = JSON.parse(fs.readFileSync(`./jsonData/${file}`).toString());
-            let pMessages = 0, oMessages = 0;
-            fileAsJSON.messages.forEach(message => {
-                if (userData.autofill_information_v2.FULL_NAME.includes(message.sender_name)) pMessages += 1;
-                else oMessages += 1;
-                return;
-            });
             allConversations[file.split(".")[0]] = {
                 conversationType: fileAsJSON.thread_type,
                 title: fileAsJSON.title,
                 file: file,
                 originalFilePath: fileAsJSON.thread_path,
                 participants: fileAsJSON.participants,
-                pMessages: pMessages,
-                oMessages: oMessages,
-                pPhotos: fileAsJSON.messages.filter(m => !m.content && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).length,
-                oPhotos: fileAsJSON.messages.filter(m => !m.content && !userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).length,
-                rMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))).length
+                pMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))).length,
+                oMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && !userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))).length,
+                pPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos &&userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).length,
+                oPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos && !userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).length,
+                cpMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).length,
+                coMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && !userData.autofill_information_v2.FULL_NAME.includes(m.sender_name)).length,
+                rpMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))).length,
+                roMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && !userData.autofill_information_v2.FULL_NAME.includes(m.sender_name))).length
             };
             delete fileAsJSON;
             return;
@@ -31,13 +28,8 @@ module.exports = {
     },
     createOverview: function () {
         let allUserShort = JSON.parse(fs.readFileSync("./analysedData/allUsers.json").toString());
-        let allMessagesSent = 0, allPhotosSent = 0, allMessagesReceived = 0, allPhotosReceived = 0, removedMessages = 0, onePersonConversations = new Array(), standardConversations = new Array(), groupConversations = new Array();
+        let onePersonConversations = new Array(), standardConversations = new Array(), groupConversations = new Array();
         for (let key in allUserShort) {
-            allMessagesSent += allUserShort[key].pMessages;
-            allMessagesReceived += allUserShort[key].oMessages;
-            allPhotosSent += allUserShort[key].pPhotos;
-            allPhotosReceived += allUserShort[key].oPhotos;
-            removedMessages += allUserShort[key].rMessages;
             if (allUserShort[key].participants.length === 1) {
                 onePersonConversations.push(key);
             } else {
@@ -45,23 +37,24 @@ module.exports = {
                 else groupConversations.push(key);
             }
         }
-        let mostMessagesPerson = Object.entries(allUserShort).filter(c => c[1].conversationType === "Regular" && c[1].participants.length === 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0];
-        let mostMessagesGroup = Object.entries(allUserShort).filter(c => c[1].conversationType !== "Regular" && c[1].participants.length >= 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0];
         let noMessages = new Array();            //Someone accepted fRequest  You accepted fRequest \/
         Object.entries(allUserShort).filter(c => c[1].pMessages === 0 || (c[1].pMessages === 1 && c[1].oMessages === 0)).forEach((u) => { return noMessages.push(u[1].title || u[0]); });
+        let parsedData = Object.entries(JSON.parse(fs.readFileSync("./analysedData/allUsers.json")));
         let summary = new Object({
             allConversations: allUserShort.length,
             onePersonConversations: onePersonConversations,
             standardConversations: standardConversations,
             groupConversations: groupConversations,
-            allMessagesSent: allMessagesSent,
-            allPhotosSent: allPhotosSent,
-            allMessagesReceived: allMessagesReceived,
-            allPhotosReceived: allPhotosReceived,
-            mostMessagesPerson: mostMessagesPerson,
-            mostMessagesGroup: mostMessagesGroup,
+            allMessagesSent: parsedData.map(u=>u[1].pMessages).reduce((a,b)=>a+b),
+            allPhotosSent: parsedData.map(u=>u[1].pPhotos).reduce((a,b)=>a+b),
+            allMessagesReceived: parsedData.map(u=>u[1].oMessages).reduce((a,b)=>a+b),
+            allPhotosReceived: parsedData.map(u=>u[1].oPhotos).reduce((a,b)=>a+b),
+            allCombinedMessagesSent: parsedData.map(u=>u[1].cpMessages).reduce((a,b)=>a+b),
+            allCombinedMessagesReceived: parsedData.map(u=>u[1].coMessages).reduce((a,b)=>a+b),
+            mostMessagesPerson: Object.entries(allUserShort).filter(c => c[1].conversationType === "Regular" && c[1].participants.length === 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
+            mostMessagesGroup: Object.entries(allUserShort).filter(c => c[1].conversationType !== "Regular" && c[1].participants.length >= 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
             noMessagesIn: noMessages,
-            removedMessages: removedMessages
+            removedMessages: parsedData.map(u=>u[1].rpMessages).reduce((a,b)=>a+b),
         });
         fs.writeFileSync("./analysedData/overview.json", JSON.stringify(summary, null, "\t"));
         return summary;

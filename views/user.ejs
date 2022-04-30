@@ -17,18 +17,26 @@
         <div id="textStatistics">
             <h2 class="subtitle">General Statistics</h2>
             <p>
-                You have sent a total of <b><%= overview.allMessagesSent %></b> messages. It includes your removed messages which is about <b><%= overview.removedMessages %></b>.
-                You have received <b><%= overview.allMessagesReceived %></b> messages. In sent messages are exactly <b><%= overview.allPhotosSent %></b> photos, and in received messages are <b><%= overview.allPhotosReceived %></b>.<br>
+                <% 
+                    let allMessagesSentTogether = overview.allMessagesSent + overview.allPhotosSent + overview.allCombinedMessagesSent; 
+                    let allMessagesReceivedTogether = overview.allMessagesReceived + overview.allPhotosReceived + overview.allCombinedMessagesReceived;
+                %>
+                Your journey on Facebook was <b><%= Object.keys(yearActivityAnalyse).length %></b> years long. I analysed your all conversations and summarized results. Here they are.
+                You have sent <b><%= overview.allMessagesSent %></b> messages with only content, <b><%= overview.allPhotosSent %></b> photos and <b><%= overview.allCombinedMessagesSent %></b> combined messages(photo and text at once).
+                On the other side you received <b><%= overview.allMessagesReceived %></b> messages with only text, <%= overview.allPhotosReceived %> photos and <%= overview.allCombinedMessagesReceived %> combined messages. 
+                <br><br>
                 Person you have written the most is <b><%= overview.mostMessagesPerson[1].title || overview.mostMessagesPerson[1].participants.filter(u=>!userData.autofill_information_v2.FULL_NAME.includes(u)) %></b>.
-                You sent <b><%= overview.mostMessagesPerson[1].pMessages%></b> messages (<%= (overview.mostMessagesPerson[1].pMessages-overview.mostMessagesPerson[1].pPhotos) + " messages and " + overview.mostMessagesPerson[1].pPhotos + " photos" %>) what is exactly <b><%= (overview.mostMessagesPerson[1].pMessages/overview.allMessagesSent*100).toFixed(2) %>%</b> of your all messages.
-                This person sent you <b><%= overview.mostMessagesPerson[1].oMessages %></b> messages (<%= (overview.mostMessagesPerson[1].oMessages-overview.mostMessagesPerson[1].oPhotos) + " messages and " + overview.mostMessagesPerson[1].oPhotos + " photos" %>), what is <b><%= (overview.mostMessagesPerson[1].oMessages/overview.allMessagesReceived*100).toFixed(2) %>%</b> of your all messages.<br>
+                You sent <b><%= overview.mostMessagesPerson[1].pMessages%></b> messages, <b><%= overview.mostMessagesPerson[1].pPhotos %></b> photos and <b><%= overview.mostMessagesPerson[1].cpMessages %></b> combined messages what is exactly <b><%= ((overview.mostMessagesPerson[1].pMessages+overview.mostMessagesPerson[1].pPhotos+ overview.mostMessagesPerson[1].cpMessages)/allMessagesSentTogether*100).toFixed(2) %>%</b> of your all sent messages.
+                This person sent you <b><%= overview.mostMessagesPerson[1].oMessages %></b> messages with text only, <b><%= overview.mostMessagesPerson[1].pPhotos %></b> photos and <b><%= overview.mostMessagesPerson[1].coMessages %></b> combined <%= overview.mostMessagesPerson[1].coMessages===1 ? "message": "messages" %>. All the messages are <b><%= ((overview.mostMessagesPerson[1].oMessages+overview.mostMessagesPerson[1].oPhotos+ overview.mostMessagesPerson[1].coMessages)/allMessagesReceivedTogether*100).toFixed(2) %>%</b> of your all messages received.
+                <br>
                 Group you have written the most is <b><%= overview.mostMessagesGroup[1].title || overview.mostMessagesGroup[1].participants.filter(u=>!userData.autofill_information_v2.FULL_NAME.includes(u)) %></b>.
-                You sent <b><%= overview.mostMessagesGroup[1].pMessages%></b> messages (<%= (overview.mostMessagesGroup[1].pMessages-overview.mostMessagesGroup[1].pPhotos) + " messages and " + overview.mostMessagesGroup[1].pPhotos + " photos" %>) what is exactly <b><%= (overview.mostMessagesGroup[1].pMessages/overview.allMessagesSent*100).toFixed(2) %>%</b> of your all messages.
-                This group sent you <b><%= overview.mostMessagesGroup[1].oMessages %></b> messages (<%= (overview.mostMessagesGroup[1].oMessages-overview.mostMessagesGroup[1].oPhotos) + " messages and " + overview.mostMessagesGroup[1].oPhotos + " photos" %>), what is <b><%= (overview.mostMessagesGroup[1].oMessages/overview.allMessagesReceived*100).toFixed(2) %>%</b> of your all messages.
+                You sent <b><%= overview.mostMessagesGroup[1].pMessages%></b> messages, <b><%= overview.mostMessagesGroup[1].pPhotos %></b> photos and <b><%= overview.mostMessagesGroup[1].cpMessages %></b> combined messages what is exactly <b><%= ((overview.mostMessagesGroup[1].pMessages+overview.mostMessagesGroup[1].pPhotos+ overview.mostMessagesGroup[1].cpMessages)/allMessagesSentTogether*100).toFixed(2) %>%</b> of your all sent messages.
+                This Group sent you <b><%= overview.mostMessagesGroup[1].oMessages %></b> messages with text only, <b><%= overview.mostMessagesGroup[1].pPhotos %></b> photos and <b><%= overview.mostMessagesGroup[1].coMessages %></b> combined <%= overview.mostMessagesGroup[1].coMessages===1 ? "message": "messages" %>. All the messages are <b><%= ((overview.mostMessagesGroup[1].oMessages+overview.mostMessagesGroup[1].oPhotos+ overview.mostMessagesGroup[1].coMessages)/allMessagesReceivedTogether*100).toFixed(2) %>%</b> of your all messages received.
+                <br>
                 <a href="#conversations">Click here to see conversations you write the most!</a>
                 <br> <br>
                 By the way, I counted all the words you have ever written <% let wordsCount = 0; Object.keys(words).forEach( key => wordsCount+=words[key] ) %><b><%= wordsCount %></b> words!
-                It makes <b><%= (wordsCount/overview.allMessagesSent).toFixed(2) %></b> words per message.
+                It makes <b><%= (wordsCount/allMessagesSentTogether).toFixed(2) %></b> words per message.
                 Word you have used the most is <b>"<%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][0] %>"</b>. You used it over <b><%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][1] %></b> times!
                 <a href="#wordsUsage">Click here for more details!</a>
             </p>
@@ -57,8 +65,8 @@
             <h2 class="subtitle">Words you have used the most</h2>
             <p>
                 As I said before you have written <b><%= wordsCount %></b> words!
-                It means you write average of <b><%= (wordsCount/overview.allMessagesSent).toFixed(2) %></b> words per message(a message that is only a photo, text or both at once)
-                and <b><%= (wordsCount/(overview.allMessagesSent-overview.allPhotosSent)).toFixed(2) %></b> words per message(a message that is only a text or photo and text at once).
+                It means you write average of <b><%= (wordsCount/allMessagesSentTogether).toFixed(2) %></b> words per message(a message that is only a text, photo,  or both at once)
+                and <b><%= (wordsCount/(overview.allMessagesSent+overview.allCombinedMessagesSent)).toFixed(2) %></b> words per message(a message that is only a text or photo and text at once).
                 Word you have used the most is <b>"<%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][0] %>"</b>. You used it over <b><%= Object.entries(words).sort(function(a,b){return b[1]-a[1]})[0][1] %></b> times!
                 I would also like to show you some other words you use frequently. <b class="important">Important: Every word have been replaced with the same word but lower case. For example "Table" and "TABLE" are the same thing as "table". Words were divided by spaces and new lines! </b>
             </p>
@@ -130,7 +138,7 @@
             conversationTypes("<%= overview.onePersonConversations.length %>;<%= overview.standardConversations.length %>;<%= overview.groupConversations.length %>")
             yearActivityAnalyse("<%= JSON.stringify(yearActivityAnalyse) %>");
             hourActivityAnalyse("<%= JSON.stringify(hourActivityAnalyse) %>");
-            messagesSentConversations("<%= JSON.stringify(Object.entries(allUsers).sort(function(a,b){return b[1].pMessages-a[1].pMessages}).slice(0,10)) %>", "<%= overview.allMessagesSent %>", "<%= overview.allMessagesReceived %>");
+            messagesSentConversations("<%= JSON.stringify(Object.entries(allUsers).sort(function(a,b){return b[1].pMessages-a[1].pMessages}).slice(0,10)) %>", "<%= allMessagesSentTogether %>", "<%= allMessagesReceivedTogether %>");
         });
     </script>
 </body>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><%= userInf.title || userInf.file%></title>
+    <title><%= userInf.title || userInf.file.split(".")[0] %></title>
     <link rel="stylesheet" href="/styles/userTemplate.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,15 @@
 </head>
 <body>
     <h1><%= userInf.title || userInf.file %></h1>
-
-
+    <p> <%= JSON.stringify(userInf) %> </p>
+    <h2>Information about group:</h2>
+    <ol>
+        <li><b>Conversation title</b>: <%= userInf.title || userInf.file.split(".")[0] %></li>
+        <li><b>Conversation type</b>: <%= userInf.conversationType==="Regular" ? "Standard conversation" : "Group" %></li>
+        <li><b>Participants</b>: <%= userInf.participants.join(", ") %></li>
+        <li><b>Your messages</b>: <%= userInf.pMessages-userInf.pPhotos %> and <%= userInf.pPhotos %> photos</li>
+        <li><b>Messages sent by <%= userInf.conversationType==="Regular" ? userInf.title || userInf.file.split(".")[0] : "others" %>: </b><%= userInf.oMessages-userInf.oPhotos%> and  <%= userInf.oPhotos%> photos</li>
+        
+    </ol>
 </body>
 </html>
