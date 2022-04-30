@@ -142,3 +142,7 @@ ol, ul {
     display: flex;
     justify-content: center;
 }
+.warning {
+    color: green;
+    font-weight: normal;
+}
