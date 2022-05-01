@@ -12,6 +12,13 @@
     <script src="/javascript/charts.js"></script>
 </head>
 <body>
+    <div id="upperNavigation">
+        <p>
+            <a href="/">Home</a> | 
+            <a href="/user/">Overview</a> | 
+            <a href="/word/">Words</a>
+        </p>
+    </div>
     <div id="generalStatistics">
         <h1 class="title">General Statistics</h1>
         <div id="textStatistics">
@@ -45,11 +52,11 @@
         <div id="conversationTypesStatistics">
             <h2 class="subtitle">Types of conversations
                 <p>
+                    
                     There <%= (overview.onePersonConversations.length===1) ? "is" : "are" %> <b> <%= overview.onePersonConversations.length %> </b> one person conversation<%= (overview.onePersonConversations.length===1) ? "" : "s" %>, it means everybody left group or its your self-conversation. 
                     There are also <b><%= overview.standardConversations.length %></b> standard conversations(you and someone else, not included two person groups) and <b><%= overview.groupConversations.length %></b> groups. 
                     You can check individual statistics for each conversation on right side of the page.
                     Along your <b><%= overview.onePersonConversations.length + overview.standardConversations.length + overview.groupConversations.length%> </b> conversations, there <%- (overview.noMessagesIn.length===1) ? "is <b>one</b> empty conversation" : `are <b> ${overview.noMessagesIn.length}</b> empty conversations` %>.
-                    <b class="warning">Right panel might contain other numbers of conversations in each type! On the right panel as a single conversations is counted also a group you were kicked! Here it is just a group!</b>
                 </p>
             </h2>
             <h2 class="chart"><canvas id="conversationTypes" style="width:100%;"></canvas></h2>
@@ -121,7 +128,7 @@
         <p>
             <a href="/">Home</a> | 
             <a href="/user/">⬆ Overview ⬆</a> | 
-            <a href="/word/">Words page</a>
+            <a href="/word/">Words</a>
         </p>
     </div>
     <script>

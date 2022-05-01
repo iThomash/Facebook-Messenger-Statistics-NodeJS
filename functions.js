@@ -1,7 +1,8 @@
 const fs = require("fs");
+const user = require("./userClass");
 module.exports = {
-    getRecipients: function (dirRecipient, userData) {
-        let selfMessages = new Array(); // Self conversation, conversations with deleted users, groups that were left by everyone.
+    getRecipients: function (dirRecipient, user) {
+        let selfMessages = new Array(); // Self conversation, conversations with all users deleted, groups that were left by everyone.
         let conversations = new Array(); // Normal conversations, 2 people groups, conversations with pages.
         let groupConversations = new Array(); // Groups
         for (let i = 0; i < dirRecipient.length; i++) {
@@ -9,7 +10,7 @@ module.exports = {
             if (fs.existsSync(`./messages/inbox/${dirRecipient[i]}/message_1.json`)) jsonFile = JSON.parse(fs.readFileSync(`./messages/inbox/${dirRecipient[i]}/message_1.json`).toString());
             else jsonFile = JSON.parse(fs.readFileSync(`./messages/archived_threads/${dirRecipient[i]}/message_1.json`).toString());
             let tempParticipants = new Array();
-            if (jsonFile.participants.length === 0 || (jsonFile.participants.length === 1 && userData.autofill_information_v2.FULL_NAME.includes(jsonFile.participants[0].name))) {
+            if (jsonFile.participants.length === 0 || (jsonFile.participants.length === 1 && user.fullName.includes(jsonFile.participants[0].name))) {
                 selfMessages.push({ participants: new Array(this.decode(jsonFile.participants[0]?.name)), filePath: jsonFile.thread_path, title: this.decode(jsonFile.title), threadType: jsonFile.thread_type });
             } else {
                 for (let j = 0; j < jsonFile.participants.length; j++) {

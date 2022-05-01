@@ -1,6 +1,7 @@
 const fs = require("fs");
 const functions = require("./functions");
 const data = require("./dataAnalyser");
+const Person = require("./userClass");
 
 async function main() {
     if (!fs.existsSync("./messages/") || !fs.existsSync("./messages/inbox/")) {
@@ -12,11 +13,11 @@ async function main() {
         return process.exit();
     }
     const userData = JSON.parse(fs.readFileSync("./messages/autofill_information.json").toString());
+    let user = new Person(userData.autofill_information_v2);
     if (!fs.existsSync("./jsonData/")) fs.mkdirSync("./jsonData/");
     let dirMessages = fs.readdirSync("./messages/inbox/").concat(fs.readdirSync("./messages/archived_threads/"));
-
-    let participants = functions.getRecipients(dirMessages, userData);
-    fs.writeFileSync("./jsonData//general.json", JSON.stringify(participants, null, "\t"));
+    let participants = functions.getRecipients(dirMessages, user);
+    fs.writeFileSync("./jsonData/general.json", JSON.stringify(participants, null, "\t"));
     console.log("Successfully created and wrote general JSON file.");
     functions.joinFiles(participants, "./jsonData/");
     console.log("Successfully generated JSON files.");
@@ -24,14 +25,14 @@ async function main() {
     //Overview statistics generation to dont make them render 5 times
     if (!fs.existsSync("./analysedData/")) fs.mkdirSync("./analysedData/");
     console.log("Creating overview statistics.");
-    data.createAllUsersShort(userData);
-    data.createOverview();
+    data.createAllUsersShort(user);
+    data.createOverview(user);
     console.log("Analysing your activity time.");
-    data.analyseTime(userData);
+    data.analyseTime(user);
     console.log("Analysing every word you wrote.");
-    data.wordUsage(userData);
+    data.wordUsage(user);
     console.log("Generating info about reactions.");
-    data.reactionAnalyser()
+    data.reactionAnalyser();
 }
 
 function server() {

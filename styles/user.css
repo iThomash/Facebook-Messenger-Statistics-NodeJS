@@ -128,16 +128,21 @@ ol, ul {
 #conversations canvas {
     max-width: 80%;
 }
-#bottomNavigation a {
+#upperNavigation * {
+    font-size: 2em;
+    margin: 0, normal, normal, normal;
+}
+
+#bottomNavigation a, #upperNavigation a {
     color: blue;
     text-decoration: none;
     font-size: larger;
     color: gray;
 }
-#bottomNavigation a:hover {
+#bottomNavigation a:hover, #upperNavigation a:hover {
     color: black;
 }
-#bottomNavigation {
+#bottomNavigation, #upperNavigation {
     width: 100%;
     display: flex;
     justify-content: center;
