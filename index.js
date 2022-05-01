@@ -45,9 +45,10 @@ function server() {
     let dirConversations = fs.readdirSync("./messages/inbox/").concat(fs.readdirSync("./messages/archived_threads/"))
     const generatedData = JSON.parse(fs.readFileSync("./jsonData/general.json").toString());
     const userData = JSON.parse(fs.readFileSync("./messages/autofill_information.json").toString());
+    let user = new Person(userData.autofill_information_v2);
 
     app.get('/', (req, res) => {
-        res.status(200).render(__dirname + '/views/index.ejs', userData);
+        res.status(200).render(__dirname + '/views/index.ejs', user);
     });
 
     app.use('/user/:user', (req, res) => {
@@ -61,7 +62,7 @@ function server() {
 
     app.get('/user/', (req, res) => {
         let analysedData = new Object({
-            userData: userData,
+            userData: user,
             generatedData: generatedData,
             descriptions: functions.getTypeDescription(),
         });
