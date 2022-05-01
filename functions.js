@@ -10,7 +10,7 @@ module.exports = {
             if (fs.existsSync(`./messages/inbox/${dirRecipient[i]}/message_1.json`)) jsonFile = JSON.parse(fs.readFileSync(`./messages/inbox/${dirRecipient[i]}/message_1.json`).toString());
             else jsonFile = JSON.parse(fs.readFileSync(`./messages/archived_threads/${dirRecipient[i]}/message_1.json`).toString());
             let tempParticipants = new Array();
-            if (jsonFile.participants.length === 0 || (jsonFile.participants.length === 1 && user.fullName.includes(jsonFile.participants[0].name))) {
+            if (jsonFile.participants.length === 0 || (jsonFile.participants.length === 1 && user.includes(jsonFile.participants[0].name))) {
                 selfMessages.push({ participants: new Array(this.decode(jsonFile.participants[0]?.name)), filePath: jsonFile.thread_path, title: this.decode(jsonFile.title), threadType: jsonFile.thread_type });
             } else {
                 for (let j = 0; j < jsonFile.participants.length; j++) {

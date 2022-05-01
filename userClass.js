@@ -4,7 +4,7 @@ module.exports = class User {
         this.lastName = userInf.LAST_NAME;
         this.fullName = userInf.FULL_NAME;
     }
-    display() {
-        console.log(fullName);
+    getFullName() {
+        return this.fullName
     }
 }

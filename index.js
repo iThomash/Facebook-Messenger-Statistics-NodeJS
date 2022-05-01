@@ -16,7 +16,7 @@ async function main() {
     let user = new Person(userData.autofill_information_v2);
     if (!fs.existsSync("./jsonData/")) fs.mkdirSync("./jsonData/");
     let dirMessages = fs.readdirSync("./messages/inbox/").concat(fs.readdirSync("./messages/archived_threads/"));
-    let participants = functions.getRecipients(dirMessages, user);
+    let participants = functions.getRecipients(dirMessages, user.getFullName());
     fs.writeFileSync("./jsonData/general.json", JSON.stringify(participants, null, "\t"));
     console.log("Successfully created and wrote general JSON file.");
     functions.joinFiles(participants, "./jsonData/");
@@ -25,12 +25,12 @@ async function main() {
     //Overview statistics generation to dont make them render 5 times
     if (!fs.existsSync("./analysedData/")) fs.mkdirSync("./analysedData/");
     console.log("Creating overview statistics.");
-    data.createAllUsersShort(user);
-    data.createOverview(user);
+    data.createAllUsersShort(user.getFullName());
+    data.createOverview(user.getFullName());
     console.log("Analysing your activity time.");
-    data.analyseTime(user);
+    data.analyseTime(user.getFullName());
     console.log("Analysing every word you wrote.");
-    data.wordUsage(user);
+    data.wordUsage(user.getFullName());
     console.log("Generating info about reactions.");
     data.reactionAnalyser();
 }

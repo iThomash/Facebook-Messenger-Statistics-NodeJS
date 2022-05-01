@@ -1,6 +1,6 @@
 const fs = require("fs");
 module.exports = {
-    createAllUsersShort: (user) => {
+    createAllUsersShort: (userFullName) => {
         let allFiles = fs.readdirSync("./jsonData/").filter(f => f != "general.json");
         let allConversations = new Object();
         allFiles.forEach(file => {
@@ -11,14 +11,14 @@ module.exports = {
                 file: file,
                 originalFilePath: fileAsJSON.thread_path,
                 participants: fileAsJSON.participants,
-                pMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && user.fullName.includes(m.sender_name))).length,
-                oMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && !user.fullName.includes(m.sender_name))).length,
-                pPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos &&user.fullName.includes(m.sender_name)).length,
-                oPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos && !user.fullName.includes(m.sender_name)).length,
-                cpMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && user.fullName.includes(m.sender_name)).length,
-                coMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && !user.fullName.includes(m.sender_name)).length,
-                rpMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && user.fullName.includes(m.sender_name))).length,
-                roMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && !user.fullName.includes(m.sender_name))).length
+                pMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && userFullName.includes(m.sender_name))).length,
+                oMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && !userFullName.includes(m.sender_name))).length,
+                pPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos &&userFullName.includes(m.sender_name)).length,
+                oPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos && !userFullName.includes(m.sender_name)).length,
+                cpMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && userFullName.includes(m.sender_name)).length,
+                coMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && !userFullName.includes(m.sender_name)).length,
+                rpMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && userFullName.includes(m.sender_name))).length,
+                roMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && !userFullName.includes(m.sender_name))).length
             };
             delete fileAsJSON;
             return;
@@ -26,11 +26,11 @@ module.exports = {
         fs.writeFileSync("./analysedData/allUsers.json", JSON.stringify(allConversations, null, "\t"));
         return;
     },
-    createOverview: function (user) {
+    createOverview: function (userFullName) {
         let allUserShort = JSON.parse(fs.readFileSync("./analysedData/allUsers.json").toString());
         let onePersonConversations = new Array(), standardConversations = new Array(), groupConversations = new Array();
         for (let key in allUserShort) {
-            if (allUserShort[key].participants.length === 0 || (allUserShort[key].participants.length===1 && user.fullName.includes(allUserShort[key].participants[0]))) {
+            if (allUserShort[key].participants.length === 0 || (allUserShort[key].participants.length===1 && userFullName.includes(allUserShort[key].participants[0]))) {
                 onePersonConversations.push(key);
             } else {
                 if (allUserShort[key].conversationType === "Regular") standardConversations.push(key);
@@ -59,11 +59,11 @@ module.exports = {
         fs.writeFileSync("./analysedData/overview.json", JSON.stringify(summary, null, "\t"));
         return summary;
     },
-    analyseTime: async function (user) {
+    analyseTime: async function (userFullName) {
         let year = new Object(), hour = new Object();
         fs.readdirSync("./jsonData/").filter(f => f != "general.json").forEach((file) => {
             let tempFile = JSON.parse(fs.readFileSync(`./jsonData/${file}`).toString());
-            tempFile.messages.filter(f => user.fullName.includes(f.sender_name)).forEach((message) => {
+            tempFile.messages.filter(f => userFullName.includes(f.sender_name)).forEach((message) => {
                 let tempDate = new Date(message.timestamp_ms);
                 if (!year[tempDate.getUTCFullYear()]) year[tempDate.getUTCFullYear()] = 1;
                 else year[tempDate.getUTCFullYear()] += 1;
@@ -94,15 +94,15 @@ module.exports = {
         });
         return thingToBeFixed;
     },
-    wordUsage: function (user) {
+    wordUsage: function (userFullName) {
         let words = new Object();
         fs.readdirSync("./jsonData/").filter(f => f != "general.json").forEach((file) => {
             let bigMessage = "", anotherBigMessage="";
             bigMessage = JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages
-                .filter(m => m.content && user.fullName.includes(m.sender_name))
+                .filter(m => m.content && userFullName.includes(m.sender_name))
                 .map(message => message.content)
                 .join(" ");
-            JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages.filter(m => m.content && user.fullName.includes(m.sender_name)).forEach(message => {
+            JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages.filter(m => m.content && userFullName.includes(m.sender_name)).forEach(message => {
                 anotherBigMessage += " " + message.content;
                 return;
             });
