@@ -5,6 +5,12 @@ module.exports = class User {
         this.fullName = userInf.FULL_NAME;
     }
     getFullName() {
-        return this.fullName
+        return this.fullName;
+    }
+    getFirstName() {
+        return this.firstName;
+    }
+    getLastName() {
+        return this.lastName;
     }
 }

@@ -13,10 +13,10 @@ module.exports = {
                 participants: fileAsJSON.participants,
                 pMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && userFullName.includes(m.sender_name))).length,
                 oMessages: fileAsJSON.messages.filter(m => (m.content && !m.photos && !userFullName.includes(m.sender_name))).length,
-                pPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos &&userFullName.includes(m.sender_name)).length,
+                pPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos && userFullName.includes(m.sender_name)).length,
                 oPhotos: fileAsJSON.messages.filter(m => !m.content && m.photos && !userFullName.includes(m.sender_name)).length,
-                cpMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && userFullName.includes(m.sender_name)).length,
-                coMessages: fileAsJSON.messages.filter(m=> m.content && m.photos && !userFullName.includes(m.sender_name)).length,
+                cpMessages: fileAsJSON.messages.filter(m => m.content && m.photos && userFullName.includes(m.sender_name)).length,
+                coMessages: fileAsJSON.messages.filter(m => m.content && m.photos && !userFullName.includes(m.sender_name)).length,
                 rpMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && userFullName.includes(m.sender_name))).length,
                 roMessages: fileAsJSON.messages.filter(m => (m.is_unsent === true && !userFullName.includes(m.sender_name))).length
             };
@@ -30,7 +30,7 @@ module.exports = {
         let allUserShort = JSON.parse(fs.readFileSync("./analysedData/allUsers.json").toString());
         let onePersonConversations = new Array(), standardConversations = new Array(), groupConversations = new Array();
         for (let key in allUserShort) {
-            if (allUserShort[key].participants.length === 0 || (allUserShort[key].participants.length===1 && userFullName.includes(allUserShort[key].participants[0]))) {
+            if (allUserShort[key].participants.length === 0 || (allUserShort[key].participants.length === 1 && userFullName.includes(allUserShort[key].participants[0]))) {
                 onePersonConversations.push(key);
             } else {
                 if (allUserShort[key].conversationType === "Regular") standardConversations.push(key);
@@ -45,16 +45,16 @@ module.exports = {
             onePersonConversations: onePersonConversations,
             standardConversations: standardConversations,
             groupConversations: groupConversations,
-            allMessagesSent: parsedData.map(u=>u[1].pMessages).reduce((a,b)=>a+b),
-            allPhotosSent: parsedData.map(u=>u[1].pPhotos).reduce((a,b)=>a+b),
-            allMessagesReceived: parsedData.map(u=>u[1].oMessages).reduce((a,b)=>a+b),
-            allPhotosReceived: parsedData.map(u=>u[1].oPhotos).reduce((a,b)=>a+b),
-            allCombinedMessagesSent: parsedData.map(u=>u[1].cpMessages).reduce((a,b)=>a+b),
-            allCombinedMessagesReceived: parsedData.map(u=>u[1].coMessages).reduce((a,b)=>a+b),
+            allMessagesSent: parsedData.map(u => u[1].pMessages).reduce((a, b) => a + b),
+            allPhotosSent: parsedData.map(u => u[1].pPhotos).reduce((a, b) => a + b),
+            allMessagesReceived: parsedData.map(u => u[1].oMessages).reduce((a, b) => a + b),
+            allPhotosReceived: parsedData.map(u => u[1].oPhotos).reduce((a, b) => a + b),
+            allCombinedMessagesSent: parsedData.map(u => u[1].cpMessages).reduce((a, b) => a + b),
+            allCombinedMessagesReceived: parsedData.map(u => u[1].coMessages).reduce((a, b) => a + b),
             mostMessagesPerson: Object.entries(allUserShort).filter(c => c[1].conversationType === "Regular" && c[1].participants.length === 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
             mostMessagesGroup: Object.entries(allUserShort).filter(c => c[1].conversationType !== "Regular" && c[1].participants.length >= 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
             noMessagesIn: noMessages,
-            removedMessages: parsedData.map(u=>u[1].rpMessages).reduce((a,b)=>a+b),
+            removedMessages: parsedData.map(u => u[1].rpMessages).reduce((a, b) => a + b),
         });
         fs.writeFileSync("./analysedData/overview.json", JSON.stringify(summary, null, "\t"));
         return summary;
@@ -97,7 +97,7 @@ module.exports = {
     wordUsage: function (userFullName) {
         let words = new Object();
         fs.readdirSync("./jsonData/").filter(f => f != "general.json").forEach((file) => {
-            let bigMessage = "", anotherBigMessage="";
+            let bigMessage = "", anotherBigMessage = "";
             bigMessage = JSON.parse(fs.readFileSync(`./jsonData/${file}`)).messages
                 .filter(m => m.content && userFullName.includes(m.sender_name))
                 .map(message => message.content)
@@ -119,6 +119,25 @@ module.exports = {
         return;
     },
     reactionAnalyser: function () {
+        let allConversationsReactions = new Object();
+        fs.readdirSync("./jsonData/").filter(f => f != "general.json").forEach(file => {
+            let parsedFile = JSON.parse(fs.readFileSync(`./jsonData/${file}`).toString());
+            let conversationName = file.split(".")[0];
+            allConversationsReactions[conversationName] = new Object();
+            parsedFile.messages.filter(m=>m.reactions).forEach(message=>{
+                message.reactions.forEach(reaction=>{
+                    if (!Object.keys(allConversationsReactions[conversationName]).includes(reaction.actor)) {
+                        allConversationsReactions[conversationName][reaction.actor] = new Object();
+                    }
+                    if (!allConversationsReactions[conversationName][reaction.actor][reaction.reaction]) {
+                        allConversationsReactions[conversationName][reaction.actor][reaction.reaction] = 1;
+                    } else {
+                        allConversationsReactions[conversationName][reaction.actor][reaction.reaction] += 1;
+                    }
+                });
+            });
+        });
+        fs.writeFileSync("./analysedData/reactions.json", JSON.stringify(allConversationsReactions, null, "\t"));
         return;
     }
 }

@@ -19,7 +19,6 @@
         <li><b>Participants</b>: <%= userInf.participants.join(", ") %></li>
         <li><b>Your messages</b>: <%= userInf.pMessages-userInf.pPhotos %> and <%= userInf.pPhotos %> photos</li>
         <li><b>Messages sent by <%= userInf.conversationType==="Regular" ? userInf.title || userInf.file.split(".")[0] : "others" %>: </b><%= userInf.oMessages-userInf.oPhotos%> and  <%= userInf.oPhotos%> photos</li>
-        
     </ol>
 </body>
 </html>
