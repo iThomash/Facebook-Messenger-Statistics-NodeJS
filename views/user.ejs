@@ -104,6 +104,17 @@
             <% } %>
             <h2 class="chart"><canvas id="sent"></canvas></h2>
         </div>
+        <% Object.entries(reactions).filter(r=>Object.keys(r[1]).length!==0).forEach(conv=>{
+            for (let i = 0; i<=userData.fullName.length; i++) {
+                if (Object.keys(conv[1]).includes(userData.fullName[i])) {
+                    %>
+                    
+                    <%= conv %> <br> 
+                    
+                    <%
+                }
+            }
+        }) %>
     </div>
     <div id="individualStatistics">
         <h1 class="title">Individual Statistics</h1>
