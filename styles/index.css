@@ -30,11 +30,13 @@ h1 {
 button {
     font-size: xx-large ;
     border: none;
+    border-radius: 1em;
     background-color: #ccc;
     color: black;
     margin-top: 1em;
     font-weight: 500;
     padding: 10px 20px 10px 20px;
+    min-width: 400px;
 }
 button:hover{
     background-color: gray;

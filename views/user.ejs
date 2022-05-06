@@ -104,15 +104,60 @@
             <% } %>
             <h2 class="chart"><canvas id="sent"></canvas></h2>
         </div>
-        <% Object.entries(reactions).filter(r=>Object.keys(r[1]).length!==0).forEach(conv=>{
-            for (let i = 0; i<=userData.fullName.length; i++) {
-                if (Object.keys(conv[1]).includes(userData.fullName[i])) {
-                    %>
-                    <%= conv %> <br> 
-                    <%
+        <div id="reactions">
+            <h2>Reactions statistics!</h2>
+            <p>
+                Reactions are also saved in your data. Below are shown the 10 most reacted conversations! You can also compare how many reactions is yours!
+            </p>
+            <%
+            let conversationsWithReactions = new Array();
+            Object.entries(reactions).filter(r=>Object.keys(r[1]).length!==0).forEach(conv=>{
+                for (let i = 0; i<=userData.fullName.length; i++) {
+                    if (Object.keys(conv[1]).includes(userData.fullName[i])) conversationsWithReactions.push(conv[0]);
                 }
-            }
-        }) %>
+            });
+            let convUserReactions = new Object();
+            conversationsWithReactions.forEach(conv=>{
+                convUserReactions[conv] = new Object();
+                Object.entries(reactions[conv]).forEach(user=>{
+                    convUserReactions[conv][user[0]] = Object.values(user[1]).reduce((a,b)=>a+b,0);
+                });
+            });
+            let finalNumbersOfReactions = new Object();
+            Object.entries(convUserReactions).forEach(conv=>{
+                finalNumbersOfReactions[conv[0]] = Object.values(conv[1]).reduce((a,b)=>a+b,0);
+            });
+            %>
+            <ol>
+                <li><b>Conversation name - Number of all reactions in group (Number of your reactions in conversation, percent)</b></li>
+                <% Object.entries(finalNumbersOfReactions).sort((a,b)=>{return b[1]-a[1]}).slice(0,10).forEach(conv=>{ %>
+                    <% userData.fullName.forEach(name=> { %>
+                        <% let userMessages = Object.keys(convUserReactions[conv[0]]).includes(name) ? convUserReactions[conv[0]][name] : ""; %>
+                    <%- `<li>${allUsers[conv[0]].title || allUsers[conv[0]].participants.join(", ")} - <b>${conv[1]}</b> (<b>${userMessages}</b> reactions, <b>${(userMessages/conv[1]*100).toFixed(2)}%</b>)</li>` %>
+                    <% }); %>
+                <% }); %>
+            </ol>
+            <% 
+            let person = new Object();
+            conversationsWithReactions.forEach(conv=>{
+                userData.fullName.forEach(name=>{
+                    if (Object.keys(reactions[conv]).includes(name)) {
+                        person[conv] = Object.values(reactions[conv][name]).reduce((a,b)=>a+b,0);
+                    }
+                });
+            });
+            let allUserReactions = Object.values(person).reduce((a,b)=>a+b,0); 
+            %>
+            <p>
+                Maybe its not interesting, so enjoy your 10 most reacted by you conversations! 
+                In brackets is given percent of your all reactions, which is over <b><%= allUserReactions %></b>!
+            </p>
+            <ol>
+                <% Object.entries(person).sort((a,b)=>{return b[1]-a[1]}).slice(0,10).forEach(conv=>{ %>
+                    <%- `<li>${allUsers[conv[0]].title || allUsers[conv[0].participants.join(", ")]} - <b>${conv[1]}</b> reactions (${(conv[1]/allUserReactions*100).toFixed(2)}%)</li>` %>
+                <% }); %>
+            </ol>
+        </div>
     </div>
     <div id="individualStatistics">
         <h1 class="title">Individual Statistics</h1>
@@ -125,11 +170,11 @@
             </h2>
             <div class="userList">
                 <% generatedData[cType].sort(function(a,b){ return a.filePath.split("/")[1].localeCompare(b.filePath.split("/")[1])}).forEach((conv)=>{ %>
-                    <a href="/user/<%= conv.filePath.split("/")[1] %>">
-                        <%= conv.title || conv.filePath.split("/")[1] %>
-                            <%= (conv.filePath.split("/")[0]==="archived_threads" ) ? "*" : "" %>
-                    </a> <br>
-                    <% }) %>
+                <a href="/user/<%= conv.filePath.split("/")[1] %>">
+                    <%= conv.title || conv.filePath.split("/")[1] %>
+                        <%= (conv.filePath.split("/")[0]==="archived_threads" ) ? "*" : "" %>
+                </a> <br>
+                <% }) %>
             </div>
         <% }) %>
     </div>
