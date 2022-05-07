@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/javascript/charts.js"></script>
+    <script src="/javascript/charts.js" defer></script>
 </head>
 <body>
     <div id="upperNavigation">
@@ -157,6 +157,33 @@
                     <%- `<li>${allUsers[conv[0]].title || allUsers[conv[0].participants.join(", ")]} - <b>${conv[1]}</b> reactions (${(conv[1]/allUserReactions*100).toFixed(2)}%)</li>` %>
                 <% }); %>
             </ol>
+            <p><!-- empty line --></p>
+            <div class="short60">
+            <p>
+                And your most used reactions.
+            </p>
+            <ol>
+                <% 
+                let arrOfEmotes = new Object(); 
+                for (let i=0;i<userData.fullName.length;i++) {
+                    Object.entries(reactions).filter(c=>c[1][userData.fullName[i]]).forEach(conv => {
+                        Object.entries(conv[1][userData.fullName[i]]).forEach(reaction=>{
+                            if (!arrOfEmotes[reaction[0]]) {
+                                arrOfEmotes[reaction[0]] = reaction[1];
+                            }
+                            else {
+                                arrOfEmotes[reaction[0].toString()] += reaction[1];
+                            }
+                        });
+                    });
+                }
+                %>
+                <% Object.entries(arrOfEmotes).sort((a,b)=>{return b[1]-a[1]}).slice(0, 10).forEach(reaction=>{ %>
+                    <li><%= `${reaction[0]} - ${reaction[1]} times` %></li>
+                <% }); %>
+            </ol>
+            </div>
+            <h2 class="chart"><canvas id="reactionsChart"></canvas></h2>
         </div>
     </div>
     <div id="individualStatistics">
@@ -201,6 +228,7 @@
             yearActivityAnalyse("<%= JSON.stringify(yearActivityAnalyse) %>");
             hourActivityAnalyse("<%= JSON.stringify(hourActivityAnalyse) %>");
             messagesSentConversations("<%= JSON.stringify(Object.entries(allUsers).sort(function(a,b){return b[1].pMessages-a[1].pMessages}).slice(0,10)) %>", "<%= allMessagesSentTogether %>", "<%= allMessagesReceivedTogether %>");
+            reactionGraph("<%= JSON.stringify(arrOfEmotes) %>");
         });
     </script>
 </body>

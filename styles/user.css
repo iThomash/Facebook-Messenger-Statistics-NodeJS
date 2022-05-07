@@ -151,6 +151,22 @@ ol, ul {
     color: green;
     font-weight: normal;
 }
+#reactions {
+    display: flex;
+    flex-wrap: wrap;
+}
+#reactions p {
+    width: 100%;
+}
+#reactions .short60 {
+    width: 60%;
+}
+#reactions ol {
+    width: 50%;
+}
 #reactions li {
     font-size: 20px;
+}
+#reactions .chart {
+    width: 40%;
 }

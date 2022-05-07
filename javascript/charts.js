@@ -190,7 +190,7 @@ function hourActivityAnalyse(hourActivity) {
 function messagesSentConversations(overview, allMessagesSent, allMessagesReceived) {
     overview = JSON.parse(overview.replaceAll("&#34;", "\""));
     let labels = new Array(), values = new Array(), values2 = new Array();
-    for (let i =0;i <overview.length;i++ ) {
+    for (let i = 0; i < overview.length; i++) {
         labels.push(overview[i][1].title || overview[i][0]);
         values.push(overview[i][1].pMessages);
         values2.push(overview[i][1].oMessages);
@@ -203,7 +203,7 @@ function messagesSentConversations(overview, allMessagesSent, allMessagesReceive
                 backgroundColor: "rgba(0, 192, 0)",
                 hoverBackgroundColor: "rgba(0, 216, 0)",
                 data: values
-            },{
+            }, {
                 backgroundColor: "rgba(64, 150, 64)",
                 hoverBackgroundColor: "rgba(64, 200, 64)",
                 data: values2
@@ -226,11 +226,11 @@ function messagesSentConversations(overview, allMessagesSent, allMessagesReceive
                     padding: 10,
                     displayColors: false,
                     callbacks: {
-                        title: (data)=>{return (data[0].datasetIndex===0) ? "Messages sent by You" : `Messages sent by ${data[0].label}`},
-                        label: (data)=>{return `Messages: ${data.formattedValue}`},
-                        afterLabel: (data)=>{
-                            if (data.datasetIndex===0) return `% of all Messages: ${(data.parsed.y/allMessagesSent*100).toFixed(2)}%`;
-                            else return `% of all Messages: ${(data.parsed.y/allMessagesReceived*100).toFixed(2)}%`;
+                        title: (data) => { return (data[0].datasetIndex === 0) ? "Messages sent by You" : `Messages sent by ${data[0].label}` },
+                        label: (data) => { return `Messages: ${data.formattedValue}` },
+                        afterLabel: (data) => {
+                            if (data.datasetIndex === 0) return `% of all Messages: ${(data.parsed.y / allMessagesSent * 100).toFixed(2)}%`;
+                            else return `% of all Messages: ${(data.parsed.y / allMessagesReceived * 100).toFixed(2)}%`;
                         }
                     }
                 },
@@ -263,6 +263,59 @@ function messagesSentConversations(overview, allMessagesSent, allMessagesReceive
                         },
                     }
                 }
+            }
+        }
+    });
+}
+function reactionGraph(reactions) {
+    reactions = JSON.parse(reactions.replaceAll("&#34;", "\""));
+    let reactionsEntries = Object.entries(reactions).sort((a, b) => { return b[1] - a[1] }).slice(0, 10);
+    let keys= new Array(), values = new Array();
+    for (let i = 0; i < 10; i++) {
+        keys.push(reactionsEntries[i][0]);
+        values.push(reactionsEntries[i][1]);
+    }
+    new Chart("reactionsChart", {
+        type: "pie",
+        data: {
+            labels: keys,
+            datasets: [{
+                backgroundColor: new Array("#3a0", "#8a0", "#ba0", "#32CD32", "#568203", "#556B2F", "#355E3B", "#014421", "#009E60", "#177245"),
+                data: values
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: "right",
+                    labels: {
+                        font: {
+                            size: 20
+                        },
+                        color: "black"
+                    }
+                },
+                title: {
+                    font: {
+                        size: 30,
+                    },
+                    color: "black",
+                    display: true,
+                    text: "Reactions usage"
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: "white",
+                    borderColor: "black",
+                    borderWidth: "2",
+                    padding: 10,
+                    bodyColor: "black",
+                    bodyFont: {
+                        size: 22,
+                        weight: 'bold'
+                    },
+                    displayColors: false
+                },
             }
         }
     });
