@@ -1,6 +1,9 @@
 * {
     font-family: 'Prompt', sans-serif;
 }
+body {
+    padding: 2%;
+}
 h1 {
     width: 100%;
     text-align: center;

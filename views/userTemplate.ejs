@@ -11,14 +11,21 @@
 </head>
 <body>
     <h1><%= userInf.title || userInf.file %></h1>
-    <p> <%= JSON.stringify(userInf) %> </p>
     <h2>Information about group:</h2>
     <ol>
         <li><b>Conversation title</b>: <%= userInf.title || userInf.file.split(".")[0] %></li>
         <li><b>Conversation type</b>: <%= userInf.conversationType==="Regular" ? "Standard conversation" : "Group" %></li>
         <li><b>Participants</b>: <%= userInf.participants.join(", ") %></li>
-        <li><b>Your messages</b>: <%= userInf.pMessages-userInf.pPhotos %> and <%= userInf.pPhotos %> photos</li>
+        <li><b>Your messages(only text)</b>: <%= userInf.pMessages %> messages</li>
+        <li><b>Your messages(only photo)</b>: <%= userInf.pPhotos %> photos</li>
+        <li><b>Your messages(text and photo)</b>: <%= userInf.cpMessages %> messages</li>
         <li><b>Messages sent by <%= userInf.conversationType==="Regular" ? userInf.title || userInf.file.split(".")[0] : "others" %>: </b><%= userInf.oMessages-userInf.oPhotos%> and  <%= userInf.oPhotos%> photos</li>
+    </ol>
+    <h2>Funny Information about group: </h2>
+    <ol>
+        <li><b>First message sent in group</b>: <%= firstMessage.content + " " + new Date(firstMessage.timestamp_ms) %></li>
+        <li>First photo sent in group: not working<img src="./<%= firstPhoto.photos[0].uri %>" alt=""></li>
+        <li>First message:</li>
     </ol>
 </body>
 </html>

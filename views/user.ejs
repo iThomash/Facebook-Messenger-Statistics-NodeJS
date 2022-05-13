@@ -90,7 +90,7 @@
                 <li><ol><b class="olTitle">more than 7 letter word</b> <% sortedWords.filter(w=>w[0].length>=8).slice(0, 3).forEach(word=>{ %> <li class="word"><%= word[0] %> - <%= word[1] %> times</li> <% })%></ol></li>
             </ul>
             <p>
-                <a href="/word/">Click here to see more detailed word list!</a>
+                <a href="/word/">Click here to see more detailed word list and <b>letter analyse</b>!</a>
             </p>
         </div>
         <div id="conversations">
@@ -160,7 +160,7 @@
             <p><!-- empty line --></p>
             <div class="short60">
             <p>
-                And your most used reactions.
+                And your ten most used reactions.
             </p>
             <ol>
                 <% 

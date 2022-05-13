@@ -36,9 +36,9 @@ async function main() {
 }
 
 function server() {
-    const express = require('express');
+    const express = require("express");
     const app = express();
-    app.set('view engine', 'ejs');
+    app.set("view engine", "ejs");
     app.use("/styles", express.static(__dirname + "/styles"));
     app.use("/javascript", express.static(__dirname + "/javascript"));
     const port = 80;
@@ -48,15 +48,24 @@ function server() {
     let user = new Person(userData.autofill_information_v2);
 
     app.get('/', (req, res) => {
-        res.status(200).render(__dirname + '/views/index.ejs', user);
+        res.status(200).render(__dirname + "/views/index.ejs", user);
     });
 
     app.use('/user/:user', (req, res) => {
         if (!dirConversations.includes(req.params.user)) {
             return res.status(404).render("404", { params: req.params });
         } else {
-            let user = JSON.parse(fs.readFileSync(`./analysedData/allUsers.json`).toString())[req.params.user]
-            return res.status(200).render("userTemplate", {userInf: user});
+            let user = JSON.parse(fs.readFileSync("./analysedData/allUsers.json"))[req.params.user]
+            let messages = JSON.parse(fs.readFileSync(`./jsonData/${req.params.user}.json`));
+            let groupCreator = messages.messages.filter(m=>m.content).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[0];
+            let firstMessage = messages.messages.filter(m=>m.content).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[1];
+            let firstPhoto = messages.messages.filter(m=>m.photos).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[1];
+            return res.status(200).render("userTemplate", {
+                userInf: user,
+                groupCreator: groupCreator,
+                firstMessage: firstMessage,
+                firstPhoto: firstPhoto
+            });
         }
     });
 
