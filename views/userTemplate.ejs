@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    
 </head>
 <body>
     <h1><%= userInf.title || userInf.file %></h1>
@@ -19,13 +18,12 @@
         <li><b>Your messages(only text)</b>: <%= userInf.pMessages %> messages</li>
         <li><b>Your messages(only photo)</b>: <%= userInf.pPhotos %> photos</li>
         <li><b>Your messages(text and photo)</b>: <%= userInf.cpMessages %> messages</li>
-        <li><b>Messages sent by <%= userInf.conversationType==="Regular" ? userInf.title || userInf.file.split(".")[0] : "others" %>: </b><%= userInf.oMessages-userInf.oPhotos%> and  <%= userInf.oPhotos%> photos</li>
+        <li><b>Messages sent by <%= userInf.conversationType==="Regular" ? userInf.title || userInf.file.split(".")[0] : "others" %>: </b><%= userInf.oMessages %> and  <%= userInf.oPhotos%> photos</li>
     </ol>
-    <h2>Funny Information about group: </h2>
+    <h2>Funny information about this conversation: </h2>
     <ol>
-        <li><b>First message sent in group</b>: <%= firstMessage.content + " " + new Date(firstMessage.timestamp_ms) %></li>
-        <li>First photo sent in group: not working<img src="./<%= firstPhoto.photos[0].uri %>" alt=""></li>
-        <li>First message:</li>
+        <li><b>First message sent</b>: <%= firstMessage ? firstMessage.content + " " + new Date(firstMessage.timestamp_ms) : 'no messages' %></li>
+        <li><b>First photo sent</b>: If message is not loading, check <b class="alert">another zip</b> in your data request looking for this photo. <%= firstPhoto ? `Dir: ${firstPhoto.photos[0].uri}` : ""%> <%- firstPhoto ? `<b>Date</b>: ${new Date(firstPhoto.photos[0].creation_timestamp)}<img src="./${firstPhoto.photos[0].uri}" alt="">` : 'no photos' %></li>
     </ol>
 </body>
 </html>

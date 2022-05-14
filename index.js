@@ -57,9 +57,9 @@ function server() {
         } else {
             let user = JSON.parse(fs.readFileSync("./analysedData/allUsers.json"))[req.params.user]
             let messages = JSON.parse(fs.readFileSync(`./jsonData/${req.params.user}.json`));
-            let groupCreator = messages.messages.filter(m=>m.content).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[0];
-            let firstMessage = messages.messages.filter(m=>m.content).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[1];
-            let firstPhoto = messages.messages.filter(m=>m.photos).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[1];
+            let groupCreator = messages.messages.filter(m=>m.content).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[0] || undefined;
+            let firstMessage = messages.messages.filter(m=>m.content).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[1] || undefined;
+            let firstPhoto = messages.messages.filter(m=>m.photos).sort((a,b)=>{return a.timestamp_ms-b.timestamp_ms})[1] || undefined;
             return res.status(200).render("userTemplate", {
                 userInf: user,
                 groupCreator: groupCreator,
