@@ -16,7 +16,7 @@ module.exports = {
                 for (let j = 0; j < jsonFile.participants.length; j++) {
                     tempParticipants.push(this.decode(jsonFile.participants[j].name));
                 }
-                if (jsonFile.thread_type === "Regular") conversations.push({ participants: tempParticipants, filePath: jsonFile.thread_path, title: this.decode(jsonFile.title), threadType: jsonFile.thread_type });
+                if (jsonFile.participants.length === 2) conversations.push({ participants: tempParticipants, filePath: jsonFile.thread_path, title: this.decode(jsonFile.title), threadType: jsonFile.thread_type });
                 else groupConversations.push({ participants: tempParticipants, filePath: jsonFile.thread_path, title: this.decode(jsonFile.title), threadType: jsonFile.thread_type });
             }
             delete tempParticipants;
@@ -42,7 +42,7 @@ module.exports = {
                         if (!entireConversation.participants.includes(participant.name)) entireConversation.participants.push(participant.name);
                     });
                     entireConversation.title = fileContent.title;
-                    entireConversation.thread_type = fileContent.thread_type;
+                    entireConversation.thread_type = (fileContent.participants.length ===2 ? "Regular" : "Group" );
                     entireConversation.messages = entireConversation.messages.concat(fileContent.messages);
                     entireConversation.thread_path = fileContent.thread_path;
                     return;

@@ -51,8 +51,8 @@ module.exports = {
             allPhotosReceived: parsedData.map(u => u[1].oPhotos).reduce((a, b) => a + b),
             allCombinedMessagesSent: parsedData.map(u => u[1].cpMessages).reduce((a, b) => a + b),
             allCombinedMessagesReceived: parsedData.map(u => u[1].coMessages).reduce((a, b) => a + b),
-            mostMessagesPerson: Object.entries(allUserShort).filter(c => c[1].conversationType === "Regular" && c[1].participants.length === 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
-            mostMessagesGroup: Object.entries(allUserShort).filter(c => c[1].conversationType !== "Regular" && c[1].participants.length >= 2).sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
+            mostMessagesPerson: Object.entries(allUserShort).filter(c => c[1].conversationType === "Regular").sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
+            mostMessagesGroup: Object.entries(allUserShort).filter(c => c[1].conversationType !== "Regular").sort((a, b) => { return b[1].pMessages - a[1].pMessages; })[0],
             noMessagesIn: noMessages,
             removedMessages: parsedData.map(u => u[1].rpMessages).reduce((a, b) => a + b),
         });
